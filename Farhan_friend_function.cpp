@@ -1,5 +1,9 @@
 
-// friend function of another class 
+/*
+*friend function of another class 
+*Date: 18-feb-2022
+*Farhan Ashraf
+*/
 
 #include <iostream>
 
