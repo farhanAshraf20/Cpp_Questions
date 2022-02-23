@@ -1,56 +1,52 @@
 /*
-*C++ program to overload the binary operator +
-*This program adds two complex numbers
-*Date :18-feb-2022
+*overloading the subtraction operator (+) (-) is simple as well:
+*Date :19-feb-2022
 *Farhan Ashraf
 */
+
 #include <iostream>
-using namespace std;
 
-class Complex {
-   private:
-    float real;
-    float imag;
+class Cents
+{
+private:
+	int m_cents {};
 
-   public:
-    // Constructor to initialize real and imag to 0
-    Complex() : real(0), imag(0) {}
+public:
+	Cents(int cents) { m_cents = cents; }
 
-    void input() {
-        cout << "Enter real and imaginary parts respectively: ";
-        cin >> real;
-        cin >> imag;
-    }
+	// add Cents + Cents using a friend function
+	friend Cents operator+(const Cents &c1, const Cents &c2);
 
-    // Overload the + operator
-    Complex operator + (const Complex& obj) {
-        Complex temp;
-        temp.real = real + obj.real;
-        temp.imag = imag + obj.imag;
-        return temp;
-    }
+	// subtract Cents - Cents using a friend function
+	friend Cents operator-(const Cents &c1, const Cents &c2);
 
-    void output() {
-        if (imag < 0)
-            cout << "Output Complex number: " << real << imag << "i";
-        else
-            cout << "Output Complex number: " << real << "+" << imag << "i";
-    }
+	int getCents() const { return m_cents; }
 };
 
-int main() {
-    Complex complex1, complex2, result;
+// note: this function is not a member function!
+Cents operator+(const Cents &c1, const Cents &c2)
+{
+	// use the Cents constructor and operator+(int, int)
+	// we can access m_cents directly because this is a friend function
+	return Cents{c1.m_cents + c2.m_cents};
+}
 
-    cout << "Enter first complex number:\n";
-    complex1.input();
+// note: this function is not a member function!
+Cents operator-(const Cents &c1, const Cents &c2)
+{
+	// use the Cents constructor and operator-(int, int)
+	// we can access m_cents directly because this is a friend function
+	return Cents(c1.m_cents - c2.m_cents);
+}
 
-    cout << "Enter second complex number:\n";
-    complex2.input();
+int main()
+{
+	Cents cents1{ 6 };
+	Cents cents2{ 2 };
+	Cents centsSum{ cents1 + cents2 };
+	//Cents centsSum{ cents1  cents2 };
+	std::cout << "I have " << centsSum.getCents() << " cents.\n";
+	//std::cout << "I have " << centsSum.getCents() << " cents.\n";
 
-   // complex1 calls the operator function
-   // complex2 is passed as an argument to the function
-    result = complex1 + complex2;
-    result.output();
-
-    return 0;
+	return 0;
 }
