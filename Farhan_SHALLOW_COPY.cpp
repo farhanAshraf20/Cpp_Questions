@@ -29,4 +29,16 @@ int main(){
 demo d;
 d.setVal(10,20,30);
 d.display();
+// CALL COMPILERS COPY CONSTRUCTOR = SHALLOW COPY
+demo d3;
+d3=d;
+d3.display();
+
+
+//  UPDATE THE VALUES
+d.setVal(100,200,300);
+d.display();
+d3.display();
+
+return 0;
 }
