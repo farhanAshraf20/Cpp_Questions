@@ -25,7 +25,7 @@ if(!input)
 }
 else
 {
-	while(input>>ch) //read data char by char
+	while(input>>ch) //Read Data string by string
 	{
 	//cout<<ch<<' ';
 	if (ch ==  k1 ||ch ==  k2)
