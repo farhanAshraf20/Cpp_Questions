@@ -24,7 +24,7 @@ input.open("file_Q1.txt"); //open the file
 
 	else
 	{
-		while(input >> ch) //read a char from file and save it to 's'
+		while(input >> ch) //read a string from file and save it to 'ch'
 		{
 			if(ch[0] == 'e'||ch[0] == 'E') //checking if 1st char is 'e' or not
 			{
