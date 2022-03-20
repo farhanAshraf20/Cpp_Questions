@@ -24,7 +24,7 @@ input.open("file_Q1.txt"); //open the file
 
 	else
 	{
-		while(input >> ch) //read a char from file and save it to 'ch'
+		while(input >> ch) //read a string from file and save it to 'ch'
 		{
 			int n = ch.length(); //getting length of string
 
