@@ -1,86 +1,120 @@
+/****************************************************************************************************************************************************************************************************************************************
+In this question, you are given a binary string of length T. Now you need to create two permutations of this string: S1 and S2 such that the ‘longest common subsequence’ between the two newly created strings is smallest.
 
-#include<iostream>
+Ex: Given string: 101, you can find S1: 110 and S2: 011, The longest common subsequence between S1 and S2 is 11 and the length is 2. There cannot be any two permutations of the given string where the LCS is less than 2
+Ex: Given 0111, then S1 should be: 1101, and S2: 0111, the smallest LCS will be 2 char long.
+
+Date :06-Apr-2022
+Farhan Ashraf
+******************************************************************************************************************************************************************************************************************************/
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cstring>
 using namespace std;
 
-int f_MAX_C = 0;  //Declaring & initializing a global variable
+int shorty = 2;		//Initialization
+vector<string> v1;	//Vector initialization
 
-void s_swap(char [], int);
-int f_search(char [], int);
-void f_swaps(char *, char *);
+int perm(string x) {		//Function to find the permutations
+    int bread = x.length();
+    sort(x.begin(), x.end());
+    while(1) {			//While Begin
+        v1.push_back(x);
+        int y = bread - 1;
+        while(x[y-1] >= x[y]){	//While Begin
+            if(--y == 0) {
+                return 0;
+            }	//While End
+        }	//While End
+        int z = bread - 1;
+        while(z > y && x[z] <= x[y-1]) {	//While Begin
+            z--;
+        }	//While End
+        swap(x[y-1],x[z]);
+        reverse(x.begin()+y, x.end());
+    }
+    
+}
 
+void least(char *S1, char *S2, int a, int b) {		//Function to find the LCS
+    int leastrix[a + 1][b + 1];		//Creation of the Matrix
+    for (int k = 0; k <= a; k++) {
+        for (int l = 0; l <= b; l++) {
+            if (k == 0 || l == 0) {
+                leastrix[k][l] = 0;
+            }
+            else if (S1[k - 1] == S2[l - 1]) {
+                leastrix[k][l] = leastrix[k - 1][l - 1] + 1;
+            }
+            else {
+                leastrix[k][l] = max(leastrix[k - 1][l], leastrix[k][l - 1]);
+            }
+        }
+    }
+        int indice = leastrix[a][b];
+        char lcs[indice + 1];
+        lcs[indice] = '\0';
+        int  k = a, l = b;
+        while (k > 0 && l > 0) {		//While Begins
+            if (S1[k - 1] == S2[l - 1]) {
+                lcs[indice - 1] = S1[l - 1];
+                k--;
+                l--;
+                indice--;
+            }
+            else if (leastrix[k - 1][l] > leastrix[k][l - 1]) {
+                k--;
+            }
+            else {
+                l--;
+            }
+        }	//While End
+        if(strlen(lcs) > shorty) {
+            shorty = strlen(lcs);
+        }
+        if(strlen(S1) > 2 && strlen(S2) > 2) {
+            cout << "S1 : " << S1 << "\nS2 : " << S2 << "\nLCS: " << lcs << endl;
+            cout << "Shortest pair of permutations : " << shorty << endl;
+        }    
+}//End of Function
+
+
+//Driver Code
 int main()
 {
-    int N=0;
-    
-    cout << "Enter the length of binary string : " << endl;
-    cin >> N;
-    
-    char bin_array[N];
-    
-    cout << "Enter elements of binary string : " << endl;
-    cin >> bin_array;
-    
-    f_MAX_C = f_search(bin_array, N);       //initial f_search
-    
-    s_swap(bin_array, N);             //calling swap function
-   
-    cout << "MAX Number of '01' occured is : " << f_MAX_C << endl;
-    
-    
+    string q;
+    cout << "Enter string" << endl;
+    cin >> q;
+    int loung = q.length();
+    if(q.length() == 1 || q.length() == 0) {	//Validation of the String
+        cout << "Please Check the string" << endl;
+        return 0;
+    }
+    if(q.length() == 2) {
+        cout << q << endl;
+        cout << "Only two characters so No Result" << endl;
+        return 0;
+    }
+    cout << "For this string, the permutations are:" << endl;
+    perm(q);		//Calling the Function for Permutations
+    for(int i=0;i<v1.size();i++) {
+        cout << v1[i] << endl;
+    }
+    cout << "For each pair of possible permutations:" << endl;
+    string aa,aaa;	//Variable Declaration
+    for(int i=0;i<v1.size();i++) {
+        if(i+1 < v1.size()) {
+        aa = v1[i];
+        aaa = v1[i+1];
+        char c[aa.length()+1], d[aaa.length()+1];
+        strcpy(c, aa.c_str());
+        strcpy(d,aaa.c_str());
+        least(c,d,strlen(c),strlen(d));	//Calling the Functions for LCS
+        }
+        
+    }
+    cout << "Shortest LCS will be: " << shorty << endl;
     return 0;
-    
-}  
-
-void s_swap(char arr[], int N)            //function to swap array elements based on certain conditions
-{
-    int len, max;
-    
-    //checking length of arr 'N' is even or odd
-    if(N%2 == 0)        //if N is even
-        len = N/2;
-    
-    else                //if N is odd
-        len = (N+1)/2;
-    
-    
-    //swapping algorithm
-    for(int i = 0; i<=len; i++)
-    {
-        if(arr[i] != arr[i+2])          //both value are equal
-         {
-            f_swaps(&arr[i], &arr[i+2]);           //swap 2 elements
-            max = f_search(arr, N);                 //look for new max in new array
-            
-            if( max > f_MAX_C)            // if more no. of '01' found update f_MAX_C
-                f_MAX_C = max;
-         }
-
-       else
-           continue;
-    }
-}
-
-int f_search(char arr[], int N)            //function to f_search an array and count no. of '01' pairs
-{
-    int max=0;
-    
-    for(int i = 0; i<N; i++)
-    {
-        if(arr[i] == '0' && arr[i+1] == '1')        //check for '01' pair in giver arr[]
-            max++;
-            
-        else
-            continue;
-    }
-    
-    return max;
-}
-
-void f_swaps(char *a, char *b)           //function to swap 2 values
-{
-    char t;
-    
-    t = *a;
-    *a = *b;
-    *b = t;
 }
